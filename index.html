@@ -1,14 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Algodoo-Inspired Simulator</title>
+  <title>Fruitiger Aero Simulator</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       overflow: hidden;
+      font-family: 'Helvetica', sans-serif;
+      background: #e8f0fe;
     }
     canvas {
       display: block;
@@ -19,9 +20,23 @@
       top: 10px;
       left: 10px;
       z-index: 10;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 10px;
+      border-radius: 10px;
     }
     button {
-      margin: 2px;
+      background: #6c8cf4;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      margin: 5px;
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    button:hover {
+      background: #4568db;
     }
     #speech {
       position: absolute;
@@ -34,21 +49,52 @@
       border-radius: 6px;
       max-width: 300px;
     }
+    #menu {
+      position: absolute;
+      top: 30px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      padding: 10px;
+      border-radius: 12px;
+      display: none;
+      transition: all 0.4s ease;
+    }
+    #menu button {
+      background: #5ac7c4;
+      color: white;
+      font-size: 14px;
+      padding: 8px;
+    }
+    #menu button:hover {
+      background: #3e9999;
+    }
+    #backgroundMusic {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 5;
+      display: none;
+    }
   </style>
 </head>
 <body>
   <div id="toolbar">
-    <button onclick="addCircle()">Add Circle</button>
-    <button onclick="addBox()">Add Box</button>
-    <button onclick="addImage()">Add Image</button>
-    <button onclick="addRagdoll()">Add Ragdoll</button>
+    <button onclick="toggleMenu()">Play</button>
+    <button onclick="toggleMenu()">Map Maker</button>
+    <button onclick="toggleMenu()">Ragdoll Maker</button>
     <button onclick="togglePause()">Pause/Play</button>
   </div>
   <div id="speech"></div>
-  <canvas id="world"></canvas>
-
-  <script src="https://cdn.jsdelivr.net/npm/matter-js@0.19.0/build/matter.min.js"></script>
-  <script>
+  <div id="menu">
+    <button onclick="startPlayground()">Start Playground</button>
+    <button onclick="openMapMaker()">Open Map Maker</button>
+    <button onclick="openRagdollMaker()">Open Ragdoll Maker</button>
+    <button onclick="toggleBackgroundMusic()">Toggle Music</button>
+  </div>
+  <canvas id="world"></canvas>  <audio id="backgroundMusic" loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-ukulele.mp3" type="audio/mp3" />
+  </audio>  <script src="https://cdn.jsdelivr.net/npm/matter-js@0.19.0/build/matter.min.js"></script>  <script>
     const { Engine, Render, Runner, World, Bodies, Body, Mouse, MouseConstraint, Composite, Constraint, Events } = Matter;
 
     const canvas = document.getElementById("world");
@@ -116,60 +162,48 @@
       }
     }
 
-    function addRagdoll(x = canvas.width / 2, y = 100) {
-      const parts = {};
-      parts.head = Bodies.circle(x, y, 20, { restitution: 0.4 });
-      parts.torso = Bodies.rectangle(x, y + 40, 20, 60, { restitution: 0.4 });
-      parts.leftArm = Bodies.rectangle(x - 25, y + 40, 20, 40, { restitution: 0.4 });
-      parts.rightArm = Bodies.rectangle(x + 25, y + 40, 20, 40, { restitution: 0.4 });
-      parts.leftLeg = Bodies.rectangle(x - 10, y + 90, 20, 40, { restitution: 0.4 });
-      parts.rightLeg = Bodies.rectangle(x + 10, y + 90, 20, 40, { restitution: 0.4 });
-
-      const joints = [
-        Constraint.create({ bodyA: parts.head, bodyB: parts.torso, pointA: { x: 0, y: 20 }, pointB: { x: 0, y: -30 }, stiffness: 0.6 }),
-        Constraint.create({ bodyA: parts.leftArm, bodyB: parts.torso, pointA: { x: 0, y: -20 }, pointB: { x: -10, y: -20 }, stiffness: 0.6 }),
-        Constraint.create({ bodyA: parts.rightArm, bodyB: parts.torso, pointA: { x: 0, y: -20 }, pointB: { x: 10, y: -20 }, stiffness: 0.6 }),
-        Constraint.create({ bodyA: parts.leftLeg, bodyB: parts.torso, pointA: { x: 0, y: -20 }, pointB: { x: -5, y: 30 }, stiffness: 0.6 }),
-        Constraint.create({ bodyA: parts.rightLeg, bodyB: parts.torso, pointA: { x: 0, y: -20 }, pointB: { x: 5, y: 30 }, stiffness: 0.6 })
-      ];
-
-      const ragdollParts = Object.values(parts);
-      World.add(world, [...ragdollParts, ...joints]);
-
-      speak("I have been created...");
-
-      Events.on(engine, 'beforeUpdate', () => {
-        joints.forEach((joint, index) => {
-          const length = Matter.Vector.magnitude(Matter.Vector.sub(joint.bodyA.position, joint.bodyB.position));
-          if (length > 100 && world.constraints.includes(joint)) {
-            World.remove(world, joint);
-            speak("Ouch! I broke a bone!");
-          }
-        });
-      });
+    function togglePause() {
+      if (engine.isRunning) {
+        Runner.stop(runner);
+      } else {
+        Runner.run(runner, engine);
+      }
     }
 
-    const mouse = Mouse.create(render.canvas);
-    const mouseConstraint = MouseConstraint.create(engine, {
-      mouse: mouse,
-      constraint: {
-        stiffness: 0.2,
-        render: {
-          visible: false
-        }
-      }
-    });
-    World.add(world, mouseConstraint);
-    render.mouse = mouse;
+    function startPlayground() {
+      document.getElementById('menu').style.display = 'none';
+      World.clear(world);
+      Engine.clear(engine);
+      setupPlayground();
+    }
 
-    let isPaused = false;
-    function togglePause() {
-      if (isPaused) {
-        Runner.run(runner, engine);
+    function setupPlayground() {
+      // Placeholder for physics setup, tools, etc.
+      speak("Playground loaded.");
+    }
+
+    function toggleMenu() {
+      const menu = document.getElementById('menu');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function openMapMaker() {
+      // Placeholder for map maker UI and functionality
+      speak("Opening map maker...");
+    }
+
+    function openRagdollMaker() {
+      // Placeholder for ragdoll maker UI and functionality
+      speak("Opening ragdoll maker...");
+    }
+
+    function toggleBackgroundMusic() {
+      const audio = document.getElementById('backgroundMusic');
+      if (audio.paused) {
+        audio.play();
       } else {
-        Runner.stop(runner);
+        audio.pause();
       }
-      isPaused = !isPaused;
     }
 
     window.addEventListener("resize", () => {
@@ -180,6 +214,5 @@
         max: { x: canvas.width, y: canvas.height }
       });
     });
-  </script>
-</body>
+  </script></body>
 </html>
