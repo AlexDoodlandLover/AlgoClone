@@ -79,16 +79,21 @@
 </head>
 <body>
   <div id="intro">Welcome to AlgoClone!</div>
-  <div id="sidebar">
+<div id="sidebar" style="position: fixed; top: 10px; left: 10px; padding: 10px; background: rgba(255, 255, 255, 0.8); border-radius: 8px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); width: 200px; z-index: 10;">
     <h2>AlgoClone</h2>
-    <button class="menu-button" onclick="openMapMaker()">Map Maker</button>
-    <button class="menu-button" onclick="function toggleSoftBodyPhysics() {
+<button class="menu-button" onclick="spawnSoftBody()">Spawn Soft Body</button>
+    <button class="menu-button" onclick="togglePause()">Pause / Resume</button>
+<button class="menu-button" onclick="spawnSoftBody()">Spawn Soft Body</button>
+    <button class="menu-button" onclick="togglePause()">Pause / Resume</button>
       speak("Toggling sponge physics");
       softBodyEnabled = !softBodyEnabled;
     }()">Ragdoll Maker</button>
-    <button class="menu-button" onclick="spawnSoftBody()">Spawn Soft Body</button>
+<button class="menu-button" onclick="spawnSoftBody()">Spawn Soft Body</button>
     <button class="menu-button" onclick="togglePause()">Pause / Resume</button>
-    <button class="menu-button" onclick="toggleMusic()">Toggle Music</button>
+<button class="menu-button" onclick="spawnSoftBody()">Spawn Soft Body</button>
+    <button class="menu-button" onclick="togglePause()">Pause / Resume</button>
+<button class="menu-button" onclick="spawnSoftBody()">Spawn Soft Body</button>
+    <button class="menu-button" onclick="togglePause()">Pause / Resume</button>
   </div>
 <canvas id="world"></canvas>
   <div id="speech">Loading simulation...</div>
@@ -136,6 +141,8 @@
     }
 
     function function toggleSoftBodyPhysics() {
+      speak("Soft body physics toggled");
+    }() {
       speak("Toggling sponge physics");
       softBodyEnabled = !softBodyEnabled;
     }() {
@@ -152,6 +159,20 @@
     }
 
     function spawnSoftBody() {
+      speak("Spawning soft body");
+      const stack = Composite.create();
+      for (let y = 0; y < 2; y++) {
+        for (let x = 0; x < 2; x++) {
+          const circle = Bodies.circle(300 + x * 30, 100 + y * 30, 10, {
+            restitution: 0.8,
+            render: { fillStyle: '#ff66aa' },
+            density: 0.02
+          });
+          Composite.add(stack, circle);
+        }
+      }
+      World.add(world, stack);
+    } {
       speak("Spawning soft body with sponge physics");
       const stack = Composite.create();
       for (let y = 0; y < 4; y++) {
