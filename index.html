@@ -1,346 +1,150 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AlgoClone Simulator</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      font-family: 'Segoe UI', sans-serif;
-      background: #d0eaff;
-    }
-<canvas id="world"></canvas>
-      display: block;
-    }
-    #sidebar {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 220px;
-      height: 100%;
-      background: rgba(255,255,255,0.95);
-      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-      padding: 10px;
-      overflow-y: auto;
-      z-index: 10;
-    }
-    #sidebar h2 {
-      margin-top: 0;
-      font-size: 20px;
-    }
-    .menu-button {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 6px;
-      border: none;
-      border-radius: 8px;
-      background: #4da6ff;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      text-align: left;
-    }
-    .menu-button:hover {
-      background: #007bff;
-    }
-    #speech {
-      position: absolute;
-      bottom: 10px;
-      left: 230px;
-      color: black;
-      background: rgba(255,255,255,0.8);
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 14px;
-    }
-    #intro {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #d0eaff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 36px;
-      color: #004080;
-      font-weight: bold;
-      z-index: 1000;
-      animation: fadeOut 2s ease 2s forwards;
-    }
-    @keyframes fadeOut {
-      to { opacity: 0; visibility: hidden; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Physics Simulator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        canvas {
+            display: block;
+            margin-top: 10px;
+        }
+        .controls {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+        .menu-button {
+            margin: 5px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .menu-button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-  <div id="intro">Welcome to AlgoClone!</div>
-<div id="sidebar" style="position: fixed; top: 10px; left: 10px; padding: 10px; background: rgba(255, 255, 255, 0.8); border-radius: 8px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); width: 200px; z-index: 10;">
-    <h2>AlgoClone</h2>
-<button class="menu-button" onclick="spawnSoftBody()">Spawn Soft Body</button>
-    <button class="menu-button" onclick="togglePause()">Pause / Resume</button>
-    <button class="menu-button" onclick="toggleSoftBodyPhysics()">Toggle Soft Body Physics</button>
-<button class="menu-button" onclick="spawnSoftBody()">Spawn Soft Body</button>
-    <button class="menu-button" onclick="togglePause()">Pause / Resume</button>
-    <button class="menu-button" onclick="toggleSoftBodyPhysics()">Toggle Soft Body Physics</button>
-<button class="menu-button" onclick="spawnSoftBody()">Spawn Soft Body</button>
-    <button class="menu-button" onclick="togglePause()">Pause / Resume</button>
-    <button class="menu-button" onclick="toggleSoftBodyPhysics()">Toggle Soft Body Physics</button>
-<button class="menu-button" onclick="spawnSoftBody()">Spawn Soft Body</button>
-    <button class="menu-button" onclick="togglePause()">Pause / Resume</button>
-    <button class="menu-button" onclick="toggleSoftBodyPhysics()">Toggle Soft Body Physics</button>
-      speak("Toggling sponge physics");
-      softBodyEnabled = !softBodyEnabled;
-    }()">Ragdoll Maker</button>
-<button class="menu-button" onclick="spawnSoftBody()">Spawn Soft Body</button>
-    <button class="menu-button" onclick="togglePause()">Pause / Resume</button>
-    <button class="menu-button" onclick="toggleSoftBodyPhysics()">Toggle Soft Body Physics</button>
-<button class="menu-button" onclick="spawnSoftBody()">Spawn Soft Body</button>
-    <button class="menu-button" onclick="togglePause()">Pause / Resume</button>
-    <button class="menu-button" onclick="toggleSoftBodyPhysics()">Toggle Soft Body Physics</button>
-<button class="menu-button" onclick="spawnSoftBody()">Spawn Soft Body</button>
-    <button class="menu-button" onclick="togglePause()">Pause / Resume</button>
-    <button class="menu-button" onclick="toggleSoftBodyPhysics()">Toggle Soft Body Physics</button>
-<button class="menu-button" onclick="spawnSoftBody()">Spawn Soft Body</button>
-    <button class="menu-button" onclick="togglePause()">Pause / Resume</button>
-    <button class="menu-button" onclick="toggleSoftBodyPhysics()">Toggle Soft Body Physics</button>
-<button class="menu-button" onclick="spawnSoftBody()">Spawn Soft Body</button>
-    <button class="menu-button" onclick="togglePause()">Pause / Resume</button>
-    <button class="menu-button" onclick="toggleSoftBodyPhysics()">Toggle Soft Body Physics</button>
-<button class="menu-button" onclick="spawnSoftBody()">Spawn Soft Body</button>
-    <button class="menu-button" onclick="togglePause()">Pause / Resume</button>
-    <button class="menu-button" onclick="toggleSoftBodyPhysics()">Toggle Soft Body Physics</button>
-  </div>
-<canvas id="world"></canvas>
-  <div id="speech">Loading simulation...</div>
-  <audio id="bgMusic" loop>
-    <source src="https://www.bensound.com/bensound-music/bensound-jazzyfrenchy.mp3" type="audio/mp3">
-  </audio><script>
-    const { Engine, Render, Runner, World, Bodies, Body, Composite, Constraint, Events } = Matter;
-    const canvas = document.getElementById("world");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    <div class="controls">
+        <button class="menu-button" onclick="spawnSoftBody()">Spawn Soft Body</button>
+        <button class="menu-button" onclick="togglePause()">Pause / Resume</button>
+        <button class="menu-button" onclick="togglePhysics()">Toggle Soft Body Physics</button>
+    </div>
+    <canvas id="world"></canvas>
 
-    const engine = Engine.create();
-    const world = engine.world;
-    const render = Render.create({
-      canvas,
-      engine,
-      options: {
-        width: canvas.width,
-        height: canvas.height,
-        wireframes: false,
-        background: '#d0eaff'
-      }
-    });
-    Render.run(render);
-    const runner = Runner.create();
-    Runner.run(runner, engine);
+    <script>
+        const canvas = document.getElementById('world');
+        const ctx = canvas.getContext('2d');
 
-    const ground = Bodies.rectangle(canvas.width / 2, canvas.height - 30, canvas.width, 60, {
-      isStatic: true,
-      render: { fillStyle: '#4d4d4d' }
-    });
-    World.add(world, ground);
+        let isPaused = false;
+        let softBodyEnabled = false;
 
-    function speak(text) {
-      const el = document.getElementById('speech');
-      el.textContent = text;
-      if ('speechSynthesis' in window) {
-        const utter = new SpeechSynthesisUtterance(text);
-        speechSynthesis.speak(utter);
-      }
-    }
+        // Physics engine settings (simplified for mobile performance)
+        const gravity = 0.5;
+        const objects = [];
 
-    function spawnSoftBody() {
-      speak("Spawning soft body");
-      const stack = Composite.create();
-      for (let y = 0; y < 2; y++) {
-        for (let x = 0; x < 2; x++) {
-          const circle = Bodies.circle(300 + x * 30, 100 + y * 30, 10, {
-            restitution: 0.8,
-            render: { fillStyle: '#ff66aa' },
-            density: 0.02
-          });
-          Composite.add(stack, circle);
+        // Set canvas size dynamically based on device screen
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Function to spawn soft bodies
+        function spawnSoftBody() {
+            if (softBodyEnabled) {
+                const body = {
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: 20,
+                    color: '#ff66aa',
+                    velocity: { x: 0, y: -2 }
+                };
+                objects.push(body);
+                drawObjects();
+            }
         }
-      }
-      World.add(world, stack);
-    }
 
-    function togglePause() {
-      if (runner.enabled) {
-        Runner.stop(runner);
-        speak("Simulation paused");
-      } else {
-        Runner.run(runner, engine);
-        speak("Simulation resumed");
-      }
-    }
-
-    function toggleSoftBodyPhysics() {
-      speak("Toggling soft body physics");
-    }
-
-    window.addEventListener("resize", () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      Render.lookAt(render, {
-        min: { x: 0, y: 0 },
-        max: { x: canvas.width, y: canvas.height }
-      });
-    });
-    adjustForDevice();
-  </script>  <script>
-    const { Engine, Render, Runner, World, Bodies, Body, Composite, Constraint, Events } = Matter;
-<canvas id="world"></canvas>
-<canvas id="world"></canvas>
-<canvas id="world"></canvas>
-
-    const engine = Engine.create();
-    const world = engine.world;
-    const render = Render.create({
-<canvas id="world"></canvas>
-      engine,
-      options: {
-<canvas id="world"></canvas>
-<canvas id="world"></canvas>
-        wireframes: false,
-        background: '#d0eaff'
-      }
-    });
-    Render.run(render);
-    const runner = Runner.create();
-    Runner.run(runner, engine);
-
-<canvas id="world"></canvas>
-      isStatic: true,
-      render: { fillStyle: '#4d4d4d' }
-    });
-    World.add(world, ground);
-
-    function speak(text) {
-      const el = document.getElementById('speech');
-      el.textContent = text;
-      if ('speechSynthesis' in window) {
-        const utter = new SpeechSynthesisUtterance(text);
-        speechSynthesis.speak(utter);
-      }
-    }
-
-    function openMapMaker() {
-      speak("Map Maker opened. Draw terrain with drag and drop coming soon!");
-    }
-
-    function function toggleSoftBodyPhysics() {
-      speak("Soft body physics toggled");
-    }() {
-      speak("Toggling sponge physics");
-      softBodyEnabled = !softBodyEnabled;
-    }() {
-      speak("Opening Ragdoll Maker");
-      const head = Bodies.circle(300, 100, 20, { restitution: 0.6 });
-      const torso = Bodies.rectangle(300, 160, 20, 60, { restitution: 0.6 });
-      const leg1 = Bodies.rectangle(280, 240, 20, 40, { restitution: 0.6 });
-      const leg2 = Bodies.rectangle(320, 240, 20, 40, { restitution: 0.6 });
-      const joint1 = Constraint.create({ bodyA: head, bodyB: torso, pointA: {x:0, y:20}, pointB: {x:0, y:-30}, stiffness: 0.6 });
-      const joint2 = Constraint.create({ bodyA: torso, bodyB: leg1, pointA: {x:-10, y:30}, pointB: {x:0, y:-20}, stiffness: 0.6 });
-      const joint3 = Constraint.create({ bodyA: torso, bodyB: leg2, pointA: {x:10, y:30}, pointB: {x:0, y:-20}, stiffness: 0.6 });
-      World.add(world, [head, torso, leg1, leg2, joint1, joint2, joint3]);
-      speak("Ragdoll created");
-    }
-
-    function spawnSoftBody() {
-      speak("Spawning soft body");
-      const stack = Composite.create();
-      for (let y = 0; y < 2; y++) {
-        for (let x = 0; x < 2; x++) {
-          const circle = Bodies.circle(300 + x * 30, 100 + y * 30, 10, {
-            restitution: 0.8,
-            render: { fillStyle: '#ff66aa' },
-            density: 0.02
-          });
-          Composite.add(stack, circle);
+        // Function to toggle pause
+        function togglePause() {
+            isPaused = !isPaused;
+            if (isPaused) {
+                speak("Simulation paused");
+            } else {
+                speak("Simulation resumed");
+                update();
+            }
         }
-      }
-      World.add(world, stack);
-    } {
-      speak("Spawning soft body");
-      const stack = Composite.create();
-      for (let y = 0; y < 2; y++) {
-        for (let x = 0; x < 2; x++) {
-          const circle = Bodies.circle(300 + x * 30, 100 + y * 30, 10, {
-            restitution: 0.8,
-            render: { fillStyle: '#ff66aa' },
-            density: 0.02
-          });
-          Composite.add(stack, circle);
-        }
-      }
-      World.add(world, stack);
-    } {
-      speak("Spawning soft body with sponge physics");
-      const stack = Composite.create();
-      for (let y = 0; y < 4; y++) {
-        for (let x = 0; x < 4; x++) {
-          const circle = Bodies.circle(500 + x * 20, 100 + y * 20, 10, {
-            restitution: 0.9,
-            render: { fillStyle: '#ff66aa' },
-            density: 0.02,
-            frictionAir: 0.02,
-            friction: 0.1
-          });
-          Composite.add(stack, circle);
-        }
-      }
-      World.add(world, stack);
-    }() {
-      speak("Spawning soft body");
-      const stack = Composite.create();
-      for (let y = 0; y < 4; y++) {
-        for (let x = 0; x < 4; x++) {
-          const circle = Bodies.circle(500 + x * 20, 100 + y * 20, 10, {
-            restitution: 0.9,
-            render: { fillStyle: '#ff66aa' }
-          });
-          Composite.add(stack, circle);
-        }
-      }
-      World.add(world, stack);
-    }
 
-    function togglePause() {
-      if (runner.enabled) {
-        Runner.stop(runner);
-        speak("Simulation paused");
-      } else {
-        Runner.run(runner, engine);
-        speak("Simulation resumed");
-      }
-    }
+        // Function to toggle soft body physics
+        function togglePhysics() {
+            softBodyEnabled = !softBodyEnabled;
+            speak(softBodyEnabled ? "Soft body physics enabled" : "Soft body physics disabled");
+        }
 
-    function toggleMusic() {
-      const music = document.getElementById("bgMusic");
-      if (music.paused) {
-        music.play();
-        speak("Music on");
-      } else {
-        music.pause();
-        speak("Music off");
-      }
-    }
+        // Update function that runs the physics loop
+        function update() {
+            if (isPaused) return;
 
-    window.addEventListener("resize", () => {
-<canvas id="world"></canvas>
-<canvas id="world"></canvas>
-      Render.lookAt(render, {
-        min: { x: 0, y: 0 },
-<canvas id="world"></canvas>
-      });
-    });
-  </script></body>
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Apply gravity and update positions of objects
+            for (let i = 0; i < objects.length; i++) {
+                const obj = objects[i];
+                obj.y += gravity;  // Apply gravity
+                obj.x += obj.velocity.x;
+                obj.y += obj.velocity.y;
+
+                // Bounce objects off the bottom
+                if (obj.y + obj.radius > canvas.height) {
+                    obj.y = canvas.height - obj.radius;
+                    obj.velocity.y *= -0.8; // Simulate bounce
+                }
+
+                drawObject(obj);
+            }
+
+            requestAnimationFrame(update);  // Recursively call the update function
+        }
+
+        // Function to draw objects on the canvas
+        function drawObject(obj) {
+            ctx.beginPath();
+            ctx.arc(obj.x, obj.y, obj.radius, 0, Math.PI * 2);
+            ctx.fillStyle = obj.color;
+            ctx.fill();
+        }
+
+        // Function to speak text (optional)
+        function speak(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Start the simulation when the page loads
+        window.onload = () => {
+            update();
+        };
+
+        // Resize canvas when window size changes
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
 </html>
