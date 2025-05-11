@@ -2,7 +2,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fruitiger Aero Simulator</title>
+  <title>AlgoClone Simulator</title>
   <style>
     html, body {
       margin: 0;
@@ -11,7 +11,7 @@
       font-family: 'Segoe UI', sans-serif;
       background: #d0eaff;
     }
-    canvas {
+<canvas id="world"></canvas>
       display: block;
     }
     #sidebar {
@@ -78,33 +78,36 @@
   </style>
 </head>
 <body>
-  <div id="intro">Welcome to Fruitiger Aero!</div>
+  <div id="intro">Welcome to AlgoClone!</div>
   <div id="sidebar">
-    <h2>Fruitiger Aero</h2>
+    <h2>AlgoClone</h2>
     <button class="menu-button" onclick="openMapMaker()">Map Maker</button>
-    <button class="menu-button" onclick="openRagdollMaker()">Ragdoll Maker</button>
+    <button class="menu-button" onclick="function toggleSoftBodyPhysics() {
+      speak("Toggling sponge physics");
+      softBodyEnabled = !softBodyEnabled;
+    }()">Ragdoll Maker</button>
     <button class="menu-button" onclick="spawnSoftBody()">Spawn Soft Body</button>
     <button class="menu-button" onclick="togglePause()">Pause / Resume</button>
     <button class="menu-button" onclick="toggleMusic()">Toggle Music</button>
   </div>
-  <canvas id="world"></canvas>
+<canvas id="world"></canvas>
   <div id="speech">Loading simulation...</div>
   <audio id="bgMusic" loop>
     <source src="https://www.bensound.com/bensound-music/bensound-jazzyfrenchy.mp3" type="audio/mp3">
   </audio>  <script src="https://cdn.jsdelivr.net/npm/matter-js@0.19.0/build/matter.min.js"></script>  <script>
     const { Engine, Render, Runner, World, Bodies, Body, Composite, Constraint, Events } = Matter;
-    const canvas = document.getElementById("world");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+<canvas id="world"></canvas>
+<canvas id="world"></canvas>
+<canvas id="world"></canvas>
 
     const engine = Engine.create();
     const world = engine.world;
     const render = Render.create({
-      canvas,
+<canvas id="world"></canvas>
       engine,
       options: {
-        width: canvas.width,
-        height: canvas.height,
+<canvas id="world"></canvas>
+<canvas id="world"></canvas>
         wireframes: false,
         background: '#d0eaff'
       }
@@ -113,7 +116,7 @@
     const runner = Runner.create();
     Runner.run(runner, engine);
 
-    const ground = Bodies.rectangle(canvas.width / 2, canvas.height - 30, canvas.width, 60, {
+<canvas id="world"></canvas>
       isStatic: true,
       render: { fillStyle: '#4d4d4d' }
     });
@@ -132,7 +135,10 @@
       speak("Map Maker opened. Draw terrain with drag and drop coming soon!");
     }
 
-    function openRagdollMaker() {
+    function function toggleSoftBodyPhysics() {
+      speak("Toggling sponge physics");
+      softBodyEnabled = !softBodyEnabled;
+    }() {
       speak("Opening Ragdoll Maker");
       const head = Bodies.circle(300, 100, 20, { restitution: 0.6 });
       const torso = Bodies.rectangle(300, 160, 20, 60, { restitution: 0.6 });
@@ -146,6 +152,22 @@
     }
 
     function spawnSoftBody() {
+      speak("Spawning soft body with sponge physics");
+      const stack = Composite.create();
+      for (let y = 0; y < 4; y++) {
+        for (let x = 0; x < 4; x++) {
+          const circle = Bodies.circle(500 + x * 20, 100 + y * 20, 10, {
+            restitution: 0.9,
+            render: { fillStyle: '#ff66aa' },
+            density: 0.02,
+            frictionAir: 0.02,
+            friction: 0.1
+          });
+          Composite.add(stack, circle);
+        }
+      }
+      World.add(world, stack);
+    }() {
       speak("Spawning soft body");
       const stack = Composite.create();
       for (let y = 0; y < 4; y++) {
@@ -182,11 +204,11 @@
     }
 
     window.addEventListener("resize", () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+<canvas id="world"></canvas>
+<canvas id="world"></canvas>
       Render.lookAt(render, {
         min: { x: 0, y: 0 },
-        max: { x: canvas.width, y: canvas.height }
+<canvas id="world"></canvas>
       });
     });
   </script></body>
